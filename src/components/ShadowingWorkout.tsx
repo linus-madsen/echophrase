@@ -1,6 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface Props {
   language: string;
@@ -27,7 +31,6 @@ export default function ShadowingWorkout({ language, level }: Props) {
   const chunksRef = useRef<Blob[]>([]);
 
   useEffect(() => {
-    // Load streak from localStorage
     const saved = localStorage.getItem('echophrase-streak');
     if (saved) setStreak(parseInt(saved, 10));
   }, []);
@@ -47,7 +50,6 @@ export default function ShadowingWorkout({ language, level }: Props) {
       const data = await res.json();
       setPhrase(data);
       
-      // Generate TTS
       const ttsRes = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,7 +86,6 @@ export default function ShadowingWorkout({ language, level }: Props) {
         const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
         stream.getTracks().forEach(track => track.stop());
         
-        // Send to transcription API
         const formData = new FormData();
         formData.append('audio', blob);
         formData.append('language', language);
@@ -97,14 +98,12 @@ export default function ShadowingWorkout({ language, level }: Props) {
           const data = await res.json();
           setUserTranscript(data.text);
           
-          // Calculate similarity score
           const similarity = calculateSimilarity(
             phrase?.text.toLowerCase() || '',
             data.text.toLowerCase()
           );
           setScore(Math.round(similarity * 100));
           
-          // Update streak if good score
           if (similarity >= 0.7) {
             const newStreak = streak + 1;
             setStreak(newStreak);
@@ -130,7 +129,6 @@ export default function ShadowingWorkout({ language, level }: Props) {
     }
   };
 
-  // Levenshtein-based similarity
   const calculateSimilarity = (a: string, b: string): number => {
     const aWords = a.split(/\s+/).filter(Boolean);
     const bWords = b.split(/\s+/).filter(Boolean);
@@ -166,103 +164,107 @@ export default function ShadowingWorkout({ language, level }: Props) {
     <div className="space-y-6">
       {/* Streak display */}
       <div className="flex justify-center">
-        <div className="bg-amber-200 px-4 py-2 rounded-full flex items-center gap-2">
-          <span className="text-2xl">🔥</span>
-          <span className="font-bold text-amber-900">{streak} streak</span>
-        </div>
+        <Badge variant="secondary" className="text-lg px-4 py-2">
+          🔥 {streak} streak
+        </Badge>
       </div>
 
       {/* Main card */}
-      <div className="bg-white rounded-3xl shadow-xl p-8">
-        {!phrase ? (
-          <div className="text-center py-12">
-            <button
-              onClick={fetchPhrase}
-              disabled={loading}
-              className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 px-8 rounded-2xl text-xl transition-all hover:scale-105 disabled:opacity-50"
-            >
-              {loading ? 'Loading...' : 'Start Workout 🎯'}
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {/* Phrase display */}
-            <div className="text-center">
-              <p className="text-3xl font-medium text-amber-900 mb-2">{phrase.text}</p>
-              <p className="text-lg text-amber-600">{phrase.translation}</p>
-            </div>
-
-            {/* Audio player */}
-            {audioUrl && (
-              <>
-                <audio
-                  ref={audioRef}
-                  src={audioUrl}
-                  onEnded={() => setIsPlaying(false)}
-                  className="hidden"
-                />
-                <div className="flex justify-center">
-                  <button
-                    onClick={playAudio}
-                    disabled={isPlaying}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2 disabled:opacity-50"
-                  >
-                    {isPlaying ? '🔊 Playing...' : '▶️ Listen'}
-                  </button>
-                </div>
-              </>
-            )}
-
-            {/* Recording controls */}
-            <div className="flex justify-center">
-              {!isRecording ? (
-                <button
-                  onClick={startRecording}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2"
-                >
-                  🎤 Record Your Voice
-                </button>
-              ) : (
-                <button
-                  onClick={stopRecording}
-                  className="bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-6 rounded-xl flex items-center gap-2 animate-pulse"
-                >
-                  ⏹️ Stop Recording
-                </button>
-              )}
-            </div>
-
-            {/* Results */}
-            {userTranscript !== null && (
-              <div className="border-t pt-6 space-y-4">
-                <div className="text-center">
-                  <p className="text-lg text-gray-600 mb-1">You said:</p>
-                  <p className="text-xl font-medium text-gray-800">{userTranscript || '(no speech detected)'}</p>
-                </div>
-                
-                {score !== null && (
-                  <div className="text-center bg-amber-50 rounded-2xl p-6">
-                    <span className="text-5xl">{getScoreEmoji(score)}</span>
-                    <p className="text-3xl font-bold text-amber-900 mt-2">{score}%</p>
-                    <p className="text-amber-700">{getScoreMessage(score)}</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Next phrase button */}
-            <div className="flex justify-center pt-4">
-              <button
+      <Card className="shadow-xl">
+        <CardContent className="p-8">
+          {!phrase ? (
+            <div className="text-center py-12">
+              <Button
+                size="lg"
                 onClick={fetchPhrase}
                 disabled={loading}
-                className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-6 rounded-xl disabled:opacity-50"
+                className="text-xl px-8 py-6"
               >
-                {loading ? 'Loading...' : 'Next Phrase →'}
-              </button>
+                {loading ? 'Loading...' : 'Start Workout 🎯'}
+              </Button>
             </div>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="space-y-6">
+              {/* Phrase display */}
+              <div className="text-center">
+                <p className="text-3xl font-medium mb-2">{phrase.text}</p>
+                <p className="text-lg text-muted-foreground">{phrase.translation}</p>
+              </div>
+
+              {/* Audio player */}
+              {audioUrl && (
+                <>
+                  <audio
+                    ref={audioRef}
+                    src={audioUrl}
+                    onEnded={() => setIsPlaying(false)}
+                    className="hidden"
+                  />
+                  <div className="flex justify-center">
+                    <Button
+                      variant="secondary"
+                      onClick={playAudio}
+                      disabled={isPlaying}
+                    >
+                      {isPlaying ? '🔊 Playing...' : '▶️ Listen'}
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {/* Recording controls */}
+              <div className="flex justify-center">
+                {!isRecording ? (
+                  <Button
+                    variant="destructive"
+                    onClick={startRecording}
+                  >
+                    🎤 Record Your Voice
+                  </Button>
+                ) : (
+                  <Button
+                    variant="destructive"
+                    onClick={stopRecording}
+                    className="animate-pulse"
+                  >
+                    ⏹️ Stop Recording
+                  </Button>
+                )}
+              </div>
+
+              {/* Results */}
+              {userTranscript !== null && (
+                <div className="border-t pt-6 space-y-4">
+                  <div className="text-center">
+                    <p className="text-muted-foreground mb-1">You said:</p>
+                    <p className="text-xl font-medium">{userTranscript || '(no speech detected)'}</p>
+                  </div>
+                  
+                  {score !== null && (
+                    <Alert className="text-center">
+                      <AlertDescription>
+                        <span className="text-5xl block mb-2">{getScoreEmoji(score)}</span>
+                        <p className="text-3xl font-bold">{score}%</p>
+                        <p className="text-muted-foreground">{getScoreMessage(score)}</p>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+              )}
+
+              {/* Next phrase button */}
+              <div className="flex justify-center pt-4">
+                <Button
+                  onClick={fetchPhrase}
+                  disabled={loading}
+                >
+                  {loading ? 'Loading...' : 'Next Phrase →'}
+                </Button>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

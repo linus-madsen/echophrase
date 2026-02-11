@@ -1,5 +1,7 @@
 'use client';
 
+import { Card, CardContent } from '@/components/ui/card';
+
 interface LanguageSelectorProps {
   onSelect: (language: string) => void;
 }
@@ -17,14 +19,16 @@ export default function LanguageSelector({ onSelect }: LanguageSelectorProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
       {languages.map((lang) => (
-        <button
+        <Card
           key={lang.code}
+          className="cursor-pointer hover:shadow-xl transition-all hover:scale-105 border-2 border-transparent hover:border-primary"
           onClick={() => onSelect(lang.code)}
-          className="p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all hover:scale-105 flex flex-col items-center gap-2"
         >
-          <span className="text-5xl">{lang.flag}</span>
-          <span className="text-lg font-medium text-amber-900">{lang.name}</span>
-        </button>
+          <CardContent className="p-6 flex flex-col items-center gap-2">
+            <span className="text-5xl">{lang.flag}</span>
+            <span className="text-lg font-medium">{lang.name}</span>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );

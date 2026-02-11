@@ -1,31 +1,26 @@
 'use client';
 
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function Hero() {
   return (
     <section className="py-20 px-8 text-center">
-      <h1 className="text-5xl md:text-6xl font-bold text-amber-900 mb-6">
+      <h1 className="text-5xl md:text-6xl font-bold mb-6">
         Master Any Language Through
-        <span className="text-amber-600"> Shadowing</span>
+        <span className="text-primary"> Shadowing</span>
       </h1>
-      <p className="text-xl text-amber-700 max-w-2xl mx-auto mb-8">
+      <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
         Listen to native speakers, repeat what you hear, and get instant AI feedback 
         on your pronunciation. The scientifically-proven technique used by polyglots worldwide.
       </p>
       <div className="flex gap-4 justify-center flex-wrap">
-        <Link
-          href="/#practice"
-          className="bg-amber-500 hover:bg-amber-600 text-white font-bold py-4 px-8 rounded-2xl text-lg transition-all hover:scale-105"
-        >
-          Start Free Practice →
-        </Link>
-        <Link
-          href="/how-it-works"
-          className="bg-white hover:bg-amber-50 text-amber-700 font-bold py-4 px-8 rounded-2xl text-lg border-2 border-amber-300 transition-all"
-        >
-          How It Works
-        </Link>
+        <Button size="lg" asChild>
+          <Link href="/#practice">Start Free Practice →</Link>
+        </Button>
+        <Button variant="outline" size="lg" asChild>
+          <Link href="/how-it-works">How It Works</Link>
+        </Button>
       </div>
     </section>
   );

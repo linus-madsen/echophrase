@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import LanguageSelector from '@/components/LanguageSelector';
 import ShadowingWorkout from '@/components/ShadowingWorkout';
 import Hero from '@/components/landing/Hero';
@@ -12,20 +13,18 @@ export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [level, setLevel] = useState<'beginner' | 'intermediate'>('beginner');
 
-  // Full landing page when no language selected
   if (!selectedLanguage) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100">
+      <main className="min-h-screen">
         <Hero />
         <Features />
         
-        {/* Practice Section */}
-        <section id="practice" className="py-16 px-8 bg-white">
+        <section id="practice" className="py-16 px-8 bg-background">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-amber-900 mb-4">
+            <h2 className="text-3xl font-bold mb-4">
               Start Practicing Now
             </h2>
-            <p className="text-amber-700 mb-8">
+            <p className="text-muted-foreground mb-8">
               Choose a language and begin your shadowing workout
             </p>
             <LanguageSelector onSelect={setSelectedLanguage} />
@@ -38,39 +37,32 @@ export default function Home() {
     );
   }
 
-  // Workout view when language is selected
   return (
-    <main className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 p-8">
+    <main className="min-h-screen bg-muted/30 p-8">
       <div className="max-w-3xl mx-auto">
         <header className="flex items-center justify-between mb-8">
-          <button
+          <Button
+            variant="ghost"
             onClick={() => setSelectedLanguage(null)}
-            className="text-amber-700 hover:text-amber-900 flex items-center gap-2"
           >
             ← Back
-          </button>
-          <h1 className="text-2xl font-bold text-amber-900">🎙️ EchoPhrase</h1>
+          </Button>
+          <h1 className="text-2xl font-bold">🎙️ EchoPhrase</h1>
           <div className="flex gap-2">
-            <button
+            <Button
+              variant={level === 'beginner' ? 'default' : 'outline'}
+              size="sm"
               onClick={() => setLevel('beginner')}
-              className={`px-3 py-1 rounded-full text-sm ${
-                level === 'beginner'
-                  ? 'bg-amber-600 text-white'
-                  : 'bg-amber-200 text-amber-800'
-              }`}
             >
               Beginner
-            </button>
-            <button
+            </Button>
+            <Button
+              variant={level === 'intermediate' ? 'default' : 'outline'}
+              size="sm"
               onClick={() => setLevel('intermediate')}
-              className={`px-3 py-1 rounded-full text-sm ${
-                level === 'intermediate'
-                  ? 'bg-amber-600 text-white'
-                  : 'bg-amber-200 text-amber-800'
-              }`}
             >
               Intermediate
-            </button>
+            </Button>
           </div>
         </header>
         <ShadowingWorkout language={selectedLanguage} level={level} />

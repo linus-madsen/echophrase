@@ -1,3 +1,5 @@
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
 export default function Features() {
   const features = [
     {
@@ -33,18 +35,22 @@ export default function Features() {
   ];
 
   return (
-    <section className="py-16 px-8 bg-white">
+    <section className="py-16 px-8 bg-muted/50">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-amber-900 text-center mb-12">
+        <h2 className="text-3xl font-bold text-center mb-12">
           Why Shadowing Works
         </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, i) => (
-            <div key={i} className="p-6 rounded-2xl bg-amber-50 hover:shadow-lg transition-shadow">
-              <span className="text-4xl mb-4 block">{feature.icon}</span>
-              <h3 className="text-xl font-bold text-amber-900 mb-2">{feature.title}</h3>
-              <p className="text-amber-700">{feature.description}</p>
-            </div>
+            <Card key={i} className="hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <span className="text-4xl mb-2 block">{feature.icon}</span>
+                <CardTitle>{feature.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">{feature.description}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

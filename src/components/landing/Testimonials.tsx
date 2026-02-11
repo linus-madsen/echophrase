@@ -1,3 +1,5 @@
+import { Card, CardContent } from '@/components/ui/card';
+
 export default function Testimonials() {
   const testimonials = [
     {
@@ -20,16 +22,18 @@ export default function Testimonials() {
   return (
     <section className="py-16 px-8">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-amber-900 text-center mb-12">
+        <h2 className="text-3xl font-bold text-center mb-12">
           What Learners Say
         </h2>
         <div className="grid md:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
-            <div key={i} className="bg-white p-6 rounded-2xl shadow-lg">
-              <p className="text-amber-800 italic mb-4">"{t.quote}"</p>
-              <p className="font-bold text-amber-900">{t.author}</p>
-              <p className="text-amber-600 text-sm">{t.language}</p>
-            </div>
+            <Card key={i}>
+              <CardContent className="p-6">
+                <p className="italic mb-4">"{t.quote}"</p>
+                <p className="font-bold">{t.author}</p>
+                <p className="text-sm text-muted-foreground">{t.language}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
