@@ -12,7 +12,6 @@ export default function FeedbackPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Store feedback (will be sent to API)
     try {
       await fetch('/api/feedback', {
         method: 'POST',
@@ -42,6 +41,12 @@ export default function FeedbackPage() {
     );
   }
 
+  const getButtonClass = (t: string) => {
+    return type === t
+      ? 'px-4 py-2 rounded-lg capitalize bg-amber-500 text-white'
+      : 'px-4 py-2 rounded-lg capitalize bg-amber-100 text-amber-800 hover:bg-amber-200';
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 p-8">
       <div className="max-w-2xl mx-auto">
@@ -63,11 +68,7 @@ export default function FeedbackPage() {
                   key={t}
                   type="button"
                   onClick={() => setType(t)}
-                  className={\`px-4 py-2 rounded-lg capitalize \${
-                    type === t
-                      ? 'bg-amber-500 text-white'
-                      : 'bg-amber-100 text-amber-800 hover:bg-amber-200'
-                  }\`}
+                  className={getButtonClass(t)}
                 >
                   {t === 'bug' ? '🐛 Bug Report' : t === 'feature' ? '💡 Feature Idea' : '💬 General'}
                 </button>
