@@ -3,27 +3,42 @@
 import { useState } from 'react';
 import LanguageSelector from '@/components/LanguageSelector';
 import ShadowingWorkout from '@/components/ShadowingWorkout';
+import Hero from '@/components/landing/Hero';
+import Features from '@/components/landing/Features';
+import Testimonials from '@/components/landing/Testimonials';
+import Footer from '@/components/landing/Footer';
 
 export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [level, setLevel] = useState<'beginner' | 'intermediate'>('beginner');
 
+  // Full landing page when no language selected
   if (!selectedLanguage) {
     return (
-      <main className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 flex flex-col items-center justify-center p-8">
-        <div className="max-w-2xl w-full text-center">
-          <h1 className="text-5xl font-bold text-amber-900 mb-4">
-            🎙️ EchoPhrase
-          </h1>
-          <p className="text-xl text-amber-700 mb-8">
-            Train your pronunciation with AI-powered shadowing workouts
-          </p>
-          <LanguageSelector onSelect={setSelectedLanguage} />
-        </div>
+      <main className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100">
+        <Hero />
+        <Features />
+        
+        {/* Practice Section */}
+        <section id="practice" className="py-16 px-8 bg-white">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-amber-900 mb-4">
+              Start Practicing Now
+            </h2>
+            <p className="text-amber-700 mb-8">
+              Choose a language and begin your shadowing workout
+            </p>
+            <LanguageSelector onSelect={setSelectedLanguage} />
+          </div>
+        </section>
+
+        <Testimonials />
+        <Footer />
       </main>
     );
   }
 
+  // Workout view when language is selected
   return (
     <main className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-100 p-8">
       <div className="max-w-3xl mx-auto">
